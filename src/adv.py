@@ -39,7 +39,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
-p = Player(room['outside'])
+p = Player("Bob", room['outside'])
 # Write a loop that:
 #
 # * Prints the current room name
@@ -56,6 +56,12 @@ directions = {
     'east': 'e_to'
 }
 
+def create_player():
+    player_name = input("What's your name?: ").capitalize()
+    player = Player(player_name, room['outside'])
+    print(f"Hi {player.name}, I want to play a game 🤡")
+    return player
+
 def get_new_room(p, inp):
     try:
         return getattr(p.current_room, directions[inp])
@@ -71,21 +77,26 @@ def print_details(p):
     print("What's going on here: ", p.current_room.description)
 
 
-for i in range(10):
-    print_details(p)
+def run_game():
+    player = create_player()
 
-    inp = input('Where go?: ')
+    for i in range(10):
+        print_details(player)
 
-    if inp == 'q':
-        break
+        inp = input("Which direction to you want to go?: ")
 
-    new_room = get_new_room(p, inp)
+        if inp == "q":
+            break
 
-    if new_room:
-        p.current_room = new_room
+        new_room = get_new_room(p, inp)
 
-    if i == 9:
-        print("You've been ferreting around too long, game over.")
+        if new_room:
+            p.current_room = new_room
+
+        if i == 9:
+            print("You've been ferreting around too long, game over.")
+
+run_game()
 
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
