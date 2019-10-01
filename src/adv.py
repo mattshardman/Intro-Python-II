@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -38,14 +39,55 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
-
+p = Player(room['outside'])
 # Write a loop that:
 #
 # * Prints the current room name
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
-#
+directions = {
+    'n': 'n_to',
+    's': 's_to',
+    'e': 'e_to',
+    'w': 'w_to',
+    'north': 'n_to',
+    'south': 's_to',
+    'west': 'w_to',
+    'east': 'e_to'
+}
+
+def get_new_room(p, inp):
+    try:
+        return getattr(p.current_room, directions[inp])
+    except KeyError:
+        print("That's not a direction you mug")
+        return False
+    except AttributeError:
+        print("You canne go that way")
+        return False
+
+def print_details(p):
+    print("Current location: ", p.current_room.name)
+    print("What's going on here: ", p.current_room.description)
+
+
+for i in range(10):
+    print_details(p)
+
+    inp = input('Where go?: ')
+
+    if inp == 'q':
+        break
+
+    new_room = get_new_room(p, inp)
+
+    if new_room:
+        p.current_room = new_room
+
+    if i == 9:
+        print("You've been ferreting around too long, game over.")
+
 # If the user enters a cardinal direction, attempt to move to the room there.
 # Print an error message if the movement isn't allowed.
 #
-# If the user enters "q", quit the game.
+# If the user enters "q", quit the game.s
